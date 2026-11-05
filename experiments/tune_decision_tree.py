@@ -1,16 +1,6 @@
 """
 Hyperparameter study for our Decision Tree.
 
-Run from the project root:
-    python -m experiments.tune_decision_tree --task image
-    python -m experiments.tune_decision_tree --task sentiment
-    python -m experiments.tune_decision_tree --task both --quick   (fast test run)
-
-Method: "one factor at a time". We start from a default tree and change one
-hyperparameter at a time, measuring TRAIN and VALIDATION accuracy on the
-shared split. Then we combine the best values and keep the configuration
-with the highest validation accuracy. The test set / Kaggle is never used.
-
 Outputs (results/trees/<task>/):
     dt_tuning.csv            every configuration tried
     dt_depth.png             train vs validation accuracy vs max_depth
@@ -93,7 +83,6 @@ def run(task, quick):
     best_crit = crit_df.loc[crit_df.val_acc.idxmax(), "criterion"]
 
     # 3) min_samples_leaf and 4) min_samples_split on an unlimited-depth tree
-    #    (shows how they regularise a tree that would otherwise overfit)
     for leaf in (QUICK_LEAVES if quick else LEAVES):
         evaluate({**base, "criterion": best_crit, "min_samples_leaf": leaf}, data,
                  "min_samples_leaf", rows)
@@ -106,7 +95,7 @@ def run(task, quick):
     best_leaf = int(leaf_df.loc[leaf_df.val_acc.idxmax(), "min_samples_leaf"])
     best_split = int(split_df.loc[split_df.val_acc.idxmax(), "min_samples_split"])
 
-    # 5) combine the best values (+ a version with a little more depth)
+    # 5) combine the best values
     combos = {(best_depth, best_leaf, best_split)}
     if best_depth is not None:
         combos.add((None, best_leaf, best_split))
