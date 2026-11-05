@@ -1,22 +1,6 @@
 """
 Hyperparameter study for our Random Forest.
 
-Run from the project root:
-    python -m experiments.tune_random_forest --task image
-    python -m experiments.tune_random_forest --task sentiment
-    python -m experiments.tune_random_forest --task both --quick    (fast test run)
-Options:  --jobs N   number of CPU processes (default: all cores)
-
-Experiments (all measured on the shared validation split):
- 1. Number of trees: ONE forest of 200 trees is trained, then we measure the
-    validation accuracy using only the first k trees, k = 1..200. This gives
-    the whole "accuracy vs number of trees" curve for the price of one forest.
- 2. max_features (features tried at each split): log2, sqrt, 10%, 20%.
- 3. max_depth of each tree: 5, 10, 20, None.
- 4. min_samples_leaf: 1, 5.
- Each forest also reports its out-of-bag (OOB) accuracy, which we compare
- with the validation accuracy.
-
 Outputs (results/trees/<task>/):
     rf_n_trees.csv / rf_n_trees.png
     rf_tuning.csv
