@@ -1,15 +1,6 @@
 """
 Kaggle submission with the tuned tree models.
 
-Run from the project root AFTER the tuning scripts:
-    python submit_trees.py            (Random Forest, the default)
-    python submit_trees.py --model dt (Decision Tree)
-
-The hyperparameters were chosen on the validation split. For the final model
-we retrain on ALL labelled data (train + validation = 20,000 image / 12,000
-sentiment rows): more data usually gives a slightly better model, and the
-hyperparameters stay the same.
-
 Output: results/<model>_submission.csv  (e.g. results/rf_submission.csv)
 """
 
@@ -38,7 +29,7 @@ def main(model_name, jobs):
         model.fit(X, y)
         parts.append(pd.DataFrame({"id": test_ids, "label": model.predict(X_test).astype(int)}))
 
-    # Same merging and checks as the example code on the Kaggle page
+    # Same merging and checks 
     sample = pd.read_csv(os.path.join("data", "sample_submission.csv"))
     preds = pd.concat(parts, ignore_index=True)
     sub = sample[["id"]].merge(preds, on="id", how="left", validate="one_to_one")
