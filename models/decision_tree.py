@@ -1,34 +1,5 @@
 """
-Decision Tree classifier implemented from scratch with NumPy.
-
-COMP 472 project - Person B.
-
-How it works (short version)
-----------------------------
-1. The tree starts with all training samples in one node (the root).
-2. At each node it looks for the (feature, threshold) pair that best separates
-   the classes, i.e. the split that most reduces the impurity (Gini or entropy).
-3. Samples with  x[feature] <= threshold  go to the left child, the rest go right.
-4. It repeats on each child until a stopping rule is hit:
-      - the node is pure (only one class),
-      - max_depth is reached,
-      - the node has fewer than min_samples_split samples,
-      - no split leaves at least min_samples_leaf samples on each side,
-      - the best split does not reduce impurity by at least min_impurity_decrease.
-5. A leaf stores the class distribution of its training samples. To predict,
-   a new sample walks down the tree and gets the majority class of its leaf.
-
-Speed trick: histogram (binned) split search
---------------------------------------------
-Trying every possible threshold of every feature is very slow for
-20,000 samples x 500 features. Instead, before training, each feature is cut
-into `n_bins` quantile bins (e.g. 64). Candidate thresholds are only the bin
-edges. For each node we then count, with one np.bincount call, how many
-samples of each class fall into each bin of each feature. A cumulative sum over
-the bins gives, for every candidate threshold at once, the class counts on the
-left side; the right side is (node total - left). This is the same idea used by
-LightGBM and scikit-learn's HistGradientBoosting. With n_bins >= number of
-distinct values, it gives exactly the same tree as the exhaustive search.
+Decision Tree classifier
 """
 
 import numpy as np
@@ -264,8 +235,7 @@ class DecisionTreeClassifier:
             feats = np.arange(self.n_features_)
         f = len(feats)
 
-        # Only the classes present in this node matter (deep nodes usually
-        # contain just a few of the 50 classes) -> much smaller histograms.
+    
         present = np.flatnonzero(counts)
         C = len(present)
         local = np.zeros(self.n_classes_, dtype=np.int64)
