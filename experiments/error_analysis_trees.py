@@ -1,32 +1,6 @@
 """
 Error analysis for the Decision Tree (DT) and Random Forest (RF).
 
-Run from the project root AFTER the two tuning scripts
-(it reads best_params_dt.json / best_params_rf.json):
-    python -m experiments.error_analysis_trees --task image
-    python -m experiments.error_analysis_trees --task sentiment
-
-What it does, for each task:
- 1. Trains the best DT and best RF on the training split, predicts validation.
- 2. Saves validation predictions in the same format as the k-NN script
-    (results/<task>_dt_predictions.npy, results/<task>_rf_predictions.npy and
-    the confusion matrices as .npy), in the order of the shared validation
-    split, so the team can compare mistakes across all algorithms.
- 3. Per-class precision / recall / F1, confusion matrices (plots).
- 4. Most confused class pairs.
- 5. DT vs RF: which samples each gets right / wrong, do they make the SAME
-    mistakes, does RF fix the DT's errors. If results/<task>_knn_predictions.npy
-    exists, the same comparison is also made with k-NN.
- 6. Over/underfitting: train vs validation accuracy.
- 7. Confidence: are wrong predictions made with lower confidence?
- 8. Feature importance: how many features the trees really use.
- 9. Computational cost: fit time, predict time, model size.
- Everything important is also written to summary.md (copy numbers into slides).
-
-Outputs (results/trees/<task>/): val_predictions_{dt,rf}.csv,
-per_class_{dt,rf}.csv, confusion_{dt,rf}.png, confused_pairs_{dt,rf}.csv,
-agreement.csv, (agreement_with_knn.csv), per_class_recall_dt_vs_rf.png,
-feature_importance.png, confidence.png, summary.md
 """
 
 import argparse
