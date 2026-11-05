@@ -1,9 +1,6 @@
 """
 Sanity tests for our Decision Tree and Random Forest.
-Run from the project root:   python -m experiments.tree_unit_tests
 
-These checks are a good thing to mention in the presentation: they show we
-verified our from-scratch implementation instead of trusting it blindly.
 """
 
 import time
