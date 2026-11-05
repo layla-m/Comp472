@@ -1,9 +1,6 @@
 """
 Helpers shared by the Decision Tree / Random Forest scripts.
 
-Data: we use the team's shared split created by prepare_data.py
-(data/processed/<task>_split.npz, stratified 80/20, seed 42), so the trees are
-trained and validated on exactly the same rows as k-NN and the neural network.
 """
 
 import json
@@ -23,7 +20,7 @@ RESULTS = os.path.join("results", "trees")
 # ------------------------------------------------------------------ data
 def load_split(task, quick=False):
     """Return X_train, y_train, X_val, y_val from the shared split.
-    quick=True keeps 25% of the training rows (fast test run only)."""
+    quick=True keeps 25% of the training rows."""
     path = os.path.join("data", "processed", f"{task}_split.npz")
     if not os.path.exists(path):
         raise SystemExit(f"{path} not found: run  python prepare_data.py  first.")
