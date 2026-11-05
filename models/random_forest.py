@@ -1,26 +1,5 @@
 """
-Random Forest classifier implemented from scratch (uses our own DecisionTree).
-
-COMP 472 project - Person B.
-
-How it works
-------------
-A Random Forest trains many decision trees and lets them vote. Two sources of
-randomness make the trees different from each other:
-
-1. Bagging (bootstrap aggregating): each tree is trained on a bootstrap sample,
-   i.e. n samples drawn WITH replacement from the n training samples.
-   On average a bootstrap sample contains ~63.2% of the distinct samples;
-   the other ~36.8% are "out-of-bag" (OOB) for that tree.
-2. Random feature subsets: at every split a tree only looks at a random subset
-   of `max_features` features (default sqrt(500) = 22 for images).
-
-A single deep tree has low bias but high variance (it overfits: a small change
-in the data gives a very different tree). Averaging many decorrelated trees
-keeps the low bias but greatly reduces the variance -> better generalisation.
-
-Prediction uses soft voting: the class probabilities of all trees are averaged
-and the class with the highest average probability wins.
+Random Forest classifier
 """
 
 import os
@@ -30,8 +9,6 @@ from multiprocessing import Pool
 from models.decision_tree import DecisionTreeClassifier, FeatureBinner
 
 
-# Globals used to share the (large) binned training matrix with worker
-# processes: it is sent ONCE to each worker, not once per tree.
 _SHARED = {}
 
 
@@ -95,7 +72,7 @@ class RandomForestClassifier:
         self.n_classes_ = int(y.max()) + 1
         self.n_features_ = X.shape[1]
 
-        # Bin once, share with all trees (much faster than binning per tree).
+        # Bin once, share with all trees 
         self.binner_ = FeatureBinner(self.n_bins).fit(X)
         Xb = self.binner_.transform(X)
         _SHARED.update(Xb=Xb, y=y, binner=self.binner_)
@@ -112,7 +89,7 @@ class RandomForestClassifier:
 
         n_jobs = os.cpu_count() if self.n_jobs in (-1, None) else self.n_jobs
         if n_jobs > 1:
-            # Works on Linux, macOS and Windows (scripts have a __main__ guard).
+           
             with Pool(n_jobs, initializer=_init_worker,
                       initargs=(Xb, y, self.binner_)) as pool:
                 results = pool.map(_fit_one_tree, jobs)
