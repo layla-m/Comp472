@@ -1,6 +1,6 @@
 # Comp472
 
-## Decision Tree and Random Forest (Person B)
+## Decision Tree and Random Forest 
 
 Run from the project root, after `python prepare_data.py`:
 
